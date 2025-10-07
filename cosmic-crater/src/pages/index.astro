@@ -11,7 +11,7 @@ import Banner from "../components/Banner.astro";
 
 <main class="page-wrap">
   <!-- Filters: inherit the 60px left gutter from the page -->
-  <FiltersBar padX="0" />
+  <FiltersBar padX="0" maxWidth="none"/>
 
   <SectionHeading
     text="COMMERCE INSIGHTS FROM PMG, POWERED BY ALLI"
@@ -54,9 +54,9 @@ import Banner from "../components/Banner.astro";
   />
 
   <Banner
+	containerWidth="100%"
 	padY="28px"
-	containerWidth="75%"
-	maxWidth="1500px"
+	maxWidth="none"
 	align="left"
 	ledeFontFamily="Inter, system-ui, sans-serif"
 	headlineFontFamily='"Nimbus Sans Cond L","PPRightGroteskWide",Inter,system-ui,sans-serif'

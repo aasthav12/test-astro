@@ -104,8 +104,8 @@ const initialLabel = `${fmt(start)} - ${fmt(end)}`;
 }
 
 /* ensure the controls don't stretch oddly */
-.select-wrap{ flex: 0 0 260px; }  /* fixed width like the comp */
-.date{ flex: 0 0 auto; }          /* keep intrinsic width */
+.select-wrap { position: relative; flex: 0 0 260px; width: 260px; }
+.date        { position: relative; flex: 0 0 260px; width: 260px; }
 
   .pill{
     background: var(--card);
@@ -114,6 +114,7 @@ const initialLabel = `${fmt(start)} - ${fmt(end)}`;
     border-radius: 10px;
     padding: 14px 16px;
     font: 700 16px/1.2 Inter, system-ui, sans-serif;
+    letter-spacing: .03em;
   }
 
   /* Select styling */
@@ -137,16 +138,32 @@ const initialLabel = `${fmt(start)} - ${fmt(end)}`;
     opacity: 0.8;
   }
 
-  /* Date button */
-  .date{
+    /* Date button */
+    .date{
     display: inline-flex;
     align-items: center;
+    justify-content: flex-start;      /* was: center */
     gap: 12px;
-    padding-right: 14px;
-    min-width: 290px;
-    justify-content: center;
-  }
-  .date .cal{ color: var(--accent); opacity: 1; }
+    padding: 14px 38px 14px 16px;     /* right padding leaves room for icon */
+    }
+
+    /* Label takes the left side and truncates if long */
+    #rangeLabel{
+    flex: 1 1 auto;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    }
+
+    /* Calendar icon pinned to the right edge */
+    .date .cal{
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    }
 
   /* Dialog */
   .dlg{
