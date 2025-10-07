@@ -1,25 +1,21 @@
 ---
-import MetricIcon from "./MetricIcon.astro";
-
 interface Props {
-  title?: string;             
-  icon?: "cash" | "pie" | "search" | "tag";
-
-  value?: string;             // big number text, e.g., "$74.8B"
-  caption?: string;           // small line under value
-
-  deltaText?: string;         // "+14.6% YoY compared to $65.3B"
-  deltaSign?: "up" | "down" | "neutral"; // colorizes the ribbon
+  title?: string;
+  icon?: "money" | "pie" | "inspect" | "tag";
+  value?: string;
+  caption?: string;
+  deltaText?: string;
+  deltaSign?: "up" | "down" | "neutral";
 
   // theming
-  cardBg?: string;            // main teal block
-  ink?: string;               // text color on card
-  ribbonBg?: string;          // bottom ribbon base color
-  upColor?: string;           // positive delta
-  downColor?: string;         // negative delta
+  cardBg?: string;
+  ink?: string;
+  ribbonBg?: string;
+  upColor?: string;
+  downColor?: string;
 
   // layout
-  iconSize?: string;          // px
+  iconSize?: string;  // px (string for consistency)
   radius?: string;
   padding?: string;
   minHeight?: string;
@@ -27,23 +23,32 @@ interface Props {
 
 const {
   title = "Metric",
-  icon = "cash",
+  icon = "money",
   value = "—",
   caption = "",
   deltaText = "",
   deltaSign = "neutral",
 
   cardBg = "#7FBFC6",
-  ink = "#0E6A73",       
-  ribbonBg = "#FFFFFF",  // pure white bottom strip
-  upColor = "#0E6A73",   // teal for + numbers
+  ink = "#0E6A73",
+  ribbonBg = "#FFFFFF",
+  upColor = "#0E6A73",
   downColor = "#9A3D3D",
 
-  iconSize = "96",
+  iconSize = "72",
   radius = "12px",
-  padding = "28px",
+  padding = "24px",
   minHeight = "220px",
 } = Astro.props as Props;
+
+const iconMap: Record<string, string> = {
+  money: "/Money%20Icon.svg",              
+  pie: "/Pie%20Icon.svg",               
+  inspect: "/Inspect%20Icon.svg",
+  tag: "/Tag%20Icon.svg",
+};
+
+const iconSrc = iconMap[icon];
 
 const signClass = deltaSign === "up" ? "up" : deltaSign === "down" ? "down" : "neutral";
 ---
@@ -55,23 +60,25 @@ const signClass = deltaSign === "up" ? "up" : deltaSign === "down" ? "down" : "n
   role="group"
   aria-label={title}
 >
-  <header class="head">
-    <h4 class="title">{title}</h4>
-  </header>
+  <div class="top">
+    <header class="head">
+      <h4 class="title">{title}</h4>
+    </header>
 
-  <div class="art">
-    <MetricIcon name={icon} size={iconSize} color="currentColor" strokeWidth={3}/>
-  </div>
+    <div class="art">
+      <img src={iconSrc} alt="" class="icon" loading="lazy" decoding="async" />
+    </div>
 
-  <div class="stat">
-    <div class="value">{value}</div>
-    {caption && <p class="caption">{caption}</p>}
+    <div class="stat">
+      <div class="value">{value}</div>
+      {caption && <p class="caption">{caption}</p>}
+    </div>
   </div>
 
   {deltaText && (
-    <footer class={`ribbon ${signClass}`} aria-live="polite">
+    <div class={`bottom ${signClass}`} aria-live="polite">
       {deltaText}
-    </footer>
+    </div>
   )}
 </article>
 
@@ -80,56 +87,64 @@ const signClass = deltaSign === "up" ? "up" : deltaSign === "down" ? "down" : "n
     background: var(--bg);
     color: var(--ink);
     border-radius: var(--r);
-    padding: var(--p);
-    display: grid;
-    grid-template-rows: auto 1fr auto auto;
-    gap: 12px;
     min-height: var(--minh);
-    box-shadow: 0 2px 0 rgba(0,0,0,.06) inset;
     display: flex;
     flex-direction: column;
-    align-items: center;     
-    justify-content: center;  
-    text-align: center;       
-    gap: 12px; 
+    justify-content: space-between;
+    text-align: center;
+    overflow: hidden; /* keep bottom white section inside rounded corners */
+    box-shadow: 0 2px 0 rgba(0,0,0,.06) inset;
   }
+
+  .top{
+    padding: var(--p);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
   .head .title{
     margin: 0;
-    font: 700 24px/1.15 Inter, system-ui, sans-serif;
+    font: 700 22px/1.2 Inter, system-ui, sans-serif;
     letter-spacing: .02em;
-    font-weight: 600;
   }
+
   .art{
-    display: grid;
-    place-items: center;
-    color: color-mix(in srgb, var(--ink) 85%, transparent);
+    margin: 4px 0 8px;
+    display: flex;
+    justify-content: center;
   }
+  .icon{
+    width: 72px;
+    height: auto;
+  }
+
   .value{
     margin: 0;
     font: 800 56px/1.05 "PPRightGroteskWide", Inter, system-ui, sans-serif;
     letter-spacing: .01em;
   }
   .caption{
-    margin: 10px 0 0;
+    margin: 8px 0 0;
     font: 600 16px/1.3 Inter, system-ui, sans-serif;
     opacity: .9;
   }
 
-  /* bottom ribbon */
-  .ribbon{
-    padding: 14px 16px;
-    border-radius: 8px;
+  /* bottom white section inside the same card */
+  .bottom{
     background: var(--rib);
+    padding: 14px 16px;
     font: 700 14px/1.2 Inter, system-ui, sans-serif;
     letter-spacing: .01em;
+    color: var(--up);
+    border-top: 1px solid rgba(0,0,0,.08);
   }
-  .ribbon.up{ color: var(--up); }
-  .ribbon.down{ color: var(--down); }
-  .ribbon.neutral{ color: var(--ink); }
+  .bottom.down{ color: var(--down); }
+  .bottom.neutral{ color: var(--ink); }
 
   @media (max-width: 720px){
     .value{ font-size: 44px; }
     .head .title{ font-size: 20px; }
   }
-  
 </style>

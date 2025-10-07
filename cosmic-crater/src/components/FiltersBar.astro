@@ -3,9 +3,8 @@ interface Props {
   categories?: string[];
   selectedCategory?: string;
 
-  // initial date range (ISO strings)
-  start?: string; // "2025-08-01"
-  end?: string;   // "2025-08-31"
+  start?: string;
+  end?: string;
 
   maxWidth?: string;
   padX?: string;
@@ -14,19 +13,19 @@ interface Props {
 const {
   categories = ["Electronics"],
   selectedCategory = "Electronics",
-  start = "2025-08-01",
-  end   = "2025-08-31",
+  start = "2025-08",
+  end   = "2025-11",
   maxWidth = "1200px",
   padX = "28px",
 } = Astro.props as Props;
 
-function fmt(d: string) {
-  const dt = new Date(d);
-  // M/D/YY
-  return `${dt.getMonth() + 1}/${dt.getDate()}/${String(dt.getFullYear()).slice(2)}`;
+function fmtMonth(m: string) {
+  const [y, mm] = m.split("-");
+  const dt = new Date(Number(y), Number(mm) - 1, 1);
+  return dt.toLocaleString(undefined, { month: "short", year: "numeric" });
 }
 
-const initialLabel = `${fmt(start)} - ${fmt(end)}`;
+const initialLabel = `${fmtMonth(start)} - ${fmtMonth(end)}`;
 ---
 
 <section class="filters" style={`--mw:${maxWidth}; --px:${padX};`}>
@@ -39,13 +38,12 @@ const initialLabel = `${fmt(start)} - ${fmt(end)}`;
           <option value={c} selected={c === selectedCategory}>{c}</option>
         ))}
       </select>
-      <!-- caret -->
       <svg class="caret" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 10l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
 
-    <!-- Date range -->
+    <!-- Month range -->
     <button id="rangeBtn" class="pill date" type="button" aria-haspopup="dialog" aria-expanded="false">
       <span id="rangeLabel">{initialLabel}</span>
       <svg class="cal" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -55,17 +53,16 @@ const initialLabel = `${fmt(start)} - ${fmt(end)}`;
     </button>
   </div>
 
-  <!-- tiny dialog popover for date range -->
   <dialog id="dateDlg" class="dlg">
     <form method="dialog" class="dlg-body" id="dateForm">
       <div class="row">
         <label>
-          <span>Start</span>
-          <input type="date" id="start" name="start" value={start} />
+          <span>Start month</span>
+          <input type="month" id="start" name="start" value={start} />
         </label>
         <label>
-          <span>End</span>
-          <input type="date" id="end" name="end" value={end} />
+          <span>End month</span>
+          <input type="month" id="end" name="end" value={end} />
         </label>
       </div>
       <div class="actions">
@@ -78,155 +75,118 @@ const initialLabel = `${fmt(start)} - ${fmt(end)}`;
 
 <style>
   :root{
-    /* palette from your file */
-    --ink: #211F17;
-    --accent: #00626C;
-    --border-dark: #2E3142;
-    --card: #FFFFFF;
-    --stroke: #CFC7BD; /* subtle border on E9E4DE */
+    --ink:#211F17;
+    --accent:#00626C;
+    --stroke:#CFC7BD;
+    --card:#FFFFFF;
   }
 
-  .filters{
-  width: 100%;
-}
+  .filters{ width:100%; }
 
-/* make the bar fill the row and align left */
-.inner{
-  max-width: var(--mw);
-  width: 100%;                    /* ← fill available width */
-  margin: 0;                      /* ← no auto-centering */
-  padding: 16px var(--px) 8px;
+  .inner{
+    max-width:var(--mw);
+    width:100%;
+    margin:0;
+    padding:16px var(--px) 8px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+  }
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* ← left control | right control */
-  gap: 24px;
-}
-
-/* ensure the controls don't stretch oddly */
-.select-wrap { position: relative; flex: 0 0 260px; width: 260px; }
-.date        { position: relative; flex: 0 0 260px; width: 260px; }
+  .select-wrap{ position:relative; flex:0 0 260px; width:260px; }
+  .date{ position:relative; flex:0 0 260px; width:260px; }
 
   .pill{
-    background: var(--card);
-    color: var(--accent);
-    border: 1px solid var(--stroke);
-    border-radius: 10px;
-    padding: 14px 16px;
-    font: 700 16px/1.2 Inter, system-ui, sans-serif;
-    letter-spacing: .03em;
+    background:var(--card);
+    color:var(--accent);
+    border:1px solid var(--stroke);
+    border-radius:10px;
+    padding:14px 16px;
+    font:700 16px/1.2 Inter,system-ui,sans-serif;
+    letter-spacing:.03em;
   }
 
-  /* Select styling */
-  .select-wrap{
-    position: relative;
-    width: 240px;
-  }
-  .select{
-    appearance: none;
-    width: 100%;
-    padding-right: 38px; /* room for caret */
-    cursor: pointer;
-  }
-  .caret{
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    translate: 0 -50%;
-    color: var(--accent);
-    pointer-events: none;
-    opacity: 0.8;
+  .select{ appearance:none; width:100%; padding-right:38px; cursor:pointer; }
+  .caret{ position:absolute; right:12px; top:50%; translate:0 -50%; color:var(--accent); pointer-events:none; opacity:.8; }
+
+  .date{
+    display:inline-flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:12px;
+    padding:14px 38px 14px 16px;
   }
 
-    /* Date button */
-    .date{
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;      /* was: center */
-    gap: 12px;
-    padding: 14px 38px 14px 16px;     /* right padding leaves room for icon */
-    }
+  #rangeLabel{
+    flex:1 1 auto;
+    text-align:left;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
 
-    /* Label takes the left side and truncates if long */
-    #rangeLabel{
-    flex: 1 1 auto;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    }
+  .date .cal{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--accent);
+  }
 
-    /* Calendar icon pinned to the right edge */
-    .date .cal{
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--accent);
-    }
-
-  /* Dialog */
   .dlg{
-    border: 1px solid var(--stroke);
-    border-radius: 12px;
-    padding: 0;
-    background: #fff;
-  }
-  .dlg-body{
-    padding: 14px;
-    min-width: 320px;
-  }
-  .row{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .row label{
-    display: grid;
-    gap: 6px;
-    font: 600 12px/1 Inter, system-ui, sans-serif;
-    color: var(--ink);
-  }
-  input[type="date"]{
-    padding: 10px 12px;
-    border: 1px solid var(--stroke);
-    border-radius: 8px;
-    font: 600 14px/1.2 Inter, system-ui, sans-serif;
-    color: var(--ink);
-    background: #fff;
-  }
-  .actions{
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-  .btn{
-    background: var(--accent);
-    border: none;
-    color: #fff;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font: 700 14px/1 Inter, system-ui, sans-serif;
-    cursor: pointer;
-  }
-  .btn.ghost{
-    background: transparent;
-    color: var(--ink);
-    border: 1px solid var(--stroke);
+    border:1px solid var(--stroke);
+    border-radius:12px;
+    padding:0;
+    background:#fff;
   }
 
-  /* a11y */
+  .dlg-body{ padding:14px; min-width:320px; }
+
+  .row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-bottom:12px;
+  }
+
+  .row label{
+    display:grid;
+    gap:6px;
+    font:600 12px/1 Inter,system-ui,sans-serif;
+    color:var(--ink);
+  }
+
+  input[type="month"]{
+    padding:10px 12px;
+    border:1px solid var(--stroke);
+    border-radius:8px;
+    font:600 14px/1.2 Inter,system-ui,sans-serif;
+    color:var(--ink);
+    background:#fff;
+  }
+
+  .actions{ display:flex; justify-content:flex-end; gap:8px; }
+  .btn{
+    background:var(--accent);
+    border:none;
+    color:#fff;
+    padding:10px 14px;
+    border-radius:8px;
+    font:700 14px/1 Inter,system-ui,sans-serif;
+    cursor:pointer;
+  }
+  .btn.ghost{ background:transparent; color:var(--ink); border:1px solid var(--stroke); }
+
   .visually-hidden{
-    position: absolute !important;
-    height: 1px; width: 1px;
-    overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
-    white-space: nowrap;
+    position:absolute!important;
+    height:1px;width:1px;
+    overflow:hidden;clip:rect(1px,1px,1px,1px);
+    white-space:nowrap;
   }
 </style>
 
 <script>
-  // simple popover logic
   const btn = document.getElementById('rangeBtn');
   const dlg = document.getElementById('dateDlg');
   const label = document.getElementById('rangeLabel');
@@ -234,25 +194,27 @@ const initialLabel = `${fmt(start)} - ${fmt(end)}`;
   const end = document.getElementById('end');
   const form = document.getElementById('dateForm');
 
-  function fmt(d) {
-    const dt = new Date(d);
-    return `${dt.getMonth()+1}/${dt.getDate()}/${String(dt.getFullYear()).slice(2)}`;
+  function fmtMonth(m){
+    const [y, mm] = (m || "").split("-");
+    if(!y || !mm) return "";
+    const dt = new Date(Number(y), Number(mm)-1, 1);
+    return dt.toLocaleString(undefined,{month:"short", year:"numeric"});
   }
 
-  btn?.addEventListener('click', () => {
+  btn?.addEventListener('click', ()=>{
     dlg.showModal();
-    btn.setAttribute('aria-expanded', 'true');
+    btn.setAttribute('aria-expanded','true');
   });
 
-  dlg?.addEventListener('close', () => {
-    btn.setAttribute('aria-expanded', 'false');
+  dlg?.addEventListener('close', ()=>{
+    btn.setAttribute('aria-expanded','false');
   });
 
-  form?.addEventListener('submit', (e) => {
-    if ((e.submitter?.value || "") !== "apply") return;
+  form?.addEventListener('submit', (e)=>{
+    if((e.submitter?.value||"")!=="apply") return;
     e.preventDefault();
-    if (start.value && end.value) {
-      label.textContent = `${fmt(start.value)} - ${fmt(end.value)}`;
+    if(start.value && end.value){
+      label.textContent = `${fmtMonth(start.value)} - ${fmtMonth(end.value)}`;
     }
     dlg.close();
   });
