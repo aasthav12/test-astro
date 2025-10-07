@@ -1,11 +1,108 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import TopNav from "../components/TopNav.astro";
+import FiltersBar from "../components/FiltersBar.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import VizSection from "../components/VizSection.astro";
+import Banner from "../components/Banner.astro";
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<!-- Nav: 60px gutter, a bit taller -->
+<TopNav currentPath="/commerce-intelligence" padX="60px" padY="32px" />
+
+<main class="page-wrap">
+  <!-- Filters: inherit the 60px left gutter from the page -->
+  <FiltersBar padX="0" />
+
+  <SectionHeading
+    text="COMMERCE INSIGHTS FROM PMG, POWERED BY ALLI"
+    padTop="28px"
+    fontSize="20px"
+    fontWeight="500"
+    letterSpacing="0.02em"
+    color="#211F17"
+    accent="#00626C"
+    underlineWidth="270px"
+    underlineHeight="5px"
+    underlineRadius="0"
+  />
+
+  <!-- Each VizSection is a sibling (no nesting) -->
+  <VizSection
+    title="Commerce Insights at a Glance"
+    cols={4}
+    gap="20px"
+    padTop="32px"
+    padBottom="24px"
+  />
+
+  <VizSection
+    title="Thought Leadership for your Category"
+    maxWidth="3000px"
+    cols={4}
+    gap="20px"
+    padTop="32px"
+    padBottom="24px"
+  />
+
+  <VizSection
+    title="Market Trends"
+    maxWidth="3000px"
+    cols={4}
+    gap="20px"
+    padTop="32px"
+    padBottom="24px"
+  />
+
+  <Banner
+	padY="28px"
+	containerWidth="75%"
+	maxWidth="1500px"
+	align="left"
+	ledeFontFamily="Inter, system-ui, sans-serif"
+	headlineFontFamily='"Nimbus Sans Cond L","PPRightGroteskWide",Inter,system-ui,sans-serif'
+  />
+
+
+  <VizSection
+    title="YoY Brand Insights by Top Brands"
+    maxWidth="4000px"
+    cols={4}
+    gap="20px"
+    padTop="32px"
+    padBottom="24px"
+  />
+
+  <VizSection
+    title="Category Leaders"
+    maxWidth="3000px"
+    cols={4}
+    gap="20px"
+    padTop="32px"
+    padBottom="24px"
+  />
+
+  <VizSection
+    title="Amazon US Category Leaderboard"
+    maxWidth="3000px"
+    cols={4}
+    gap="20px"
+    padTop="32px"
+    padBottom="24px"
+  />
+</main>
+
+<style is:global>
+  :root { --page-bg: #E9E4DE; }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--page-bg); color: #211F17; }
+</style>
+
+<style>
+  /* Page content shares the same 60px left gutter.
+     No max-width cap so wide sections (e.g., 3000px) can expand. */
+  .page-wrap {
+    padding: 0 60px 48px;   /* left & right = 60px */
+    max-width: none;        /* allow super-wide content */
+    margin: 0;              /* left align (not centered) */
+  }
+</style>

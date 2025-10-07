@@ -1,0 +1,114 @@
+---
+/**
+ * VizSection.astro
+ * Reusable section with a small title and a responsive grid for visuals/cards.
+ */
+interface Props {
+  title?: string;
+
+  /* layout tokens */
+  maxWidth?: string;
+  padX?: string;
+  padTop?: string;
+  padBottom?: string;
+  gapY?: string;
+
+  cols?: number;
+  gap?: string;
+
+  /* NEW – heading typography (mirrors SectionHeading props) */
+  headingFontFamily?: string;
+  headingSize?: string;
+  headingWeight?: string | number;
+  headingLetterSpacing?: string;
+  headingLineHeight?: string;
+  headingColor?: string;
+  headingUppercase?: boolean;
+}
+
+const {
+  title = "Commerce Insights at a Glance",
+
+  maxWidth = "1200px",
+  padX = "0",
+  padTop = "16px",
+  padBottom = "20px",
+  gapY = "14px",
+
+  cols = 4,
+  gap = "20px",
+
+  // defaults that match SectionHeading
+  headingFontFamily = "Inter, system-ui, sans-serif",
+  headingSize = "18px",
+  headingWeight = 500,
+  headingLetterSpacing = "0.02em",
+  headingLineHeight = "1.2",
+  headingColor = "#0E3424",
+  headingUppercase = false,
+} = Astro.props as Props;
+---
+
+<section
+  class="viz"
+  style={`--mw:${maxWidth}; --px:${padX}; --pt:${padTop}; --pb:${padBottom}; --gapY:${gapY};
+          --cols:${cols}; --gap:${gap};
+          --h-ff:${headingFontFamily}; --h-fs:${headingSize}; --h-fw:${headingWeight};
+          --h-ls:${headingLetterSpacing}; --h-lh:${headingLineHeight}; --h-color:${headingColor};
+          --h-tt:${headingUppercase ? "uppercase" : "none"};`}
+>
+  <div class="head">
+    <h3 class="h">{title}</h3>
+    <slot name="actions" />
+  </div>
+
+  <div class="grid">
+    <slot />
+  </div>
+</section>
+
+<style>
+  :root{
+    --ink:#0E3424;
+    --accent:#00626C;
+    --stroke:#CFC7BD;
+  }
+
+  .viz{
+    max-width: var(--mw);
+    margin: 0;
+    padding: var(--pt) var(--px) var(--pb);
+  }
+
+  .head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: var(--gapY);
+  }
+
+  /* Heading now uses the same token set as SectionHeading */
+  .h{
+    margin:0;
+    font-family: var(--h-ff);
+    font-size: var(--h-fs);
+    font-weight: var(--h-fw);
+    letter-spacing: var(--h-ls);
+    line-height: var(--h-lh);
+    color: var(--h-color);
+    text-transform: var(--h-tt);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(var(--cols), minmax(0,1fr));
+    gap: var(--gap);
+  }
+
+  @media (max-width: 1024px){
+    .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width: 640px){
+    .grid{ grid-template-columns: 1fr; }
+  }
+</style>

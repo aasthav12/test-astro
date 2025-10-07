@@ -1,0 +1,176 @@
+---
+/**
+ * Banner.astro
+ * Teal callout with link + big headline + book image on the right.
+ * Now supports lede/headline font-family props.
+ */
+interface Props {
+  href?: string;
+  linkLabel?: string;     // the underlined "Click here"
+  preText?: string;       // the small sentence after the link
+  headline?: string;      // BIG all-caps line
+  imageSrc?: string;      // e.g. "/commerce-intelligence.svg"
+  imageAlt?: string;
+
+  /* design */
+  barColor?: string;      // teal background
+  textColor?: string;     // text color on teal (usually white)
+  radius?: string;        // pill radius
+  padY?: string;          // vertical padding inside the teal bar
+  padX?: string;          // left/right padding inside the teal bar
+
+  reserveRight?: string;  // space kept inside bar for the image
+  imageWidth?: string;    // width of the book/cover
+  imageTop?: string;      // how much the image overlaps upward
+  imageRight?: string;    // gap from right edge
+  shadow?: string;        // image drop shadow
+
+  /* width & alignment */
+  containerWidth?: string;   // e.g. "75%" or "900px"
+  maxWidth?: string;         // optional cap when using %
+  align?: "left" | "center";
+
+  /* NEW: fonts */
+  ledeFontFamily?: string;       // matches subheader/nav look
+  headlineFontFamily?: string;   // matches hero title look
+}
+
+const {
+  href = "/demo",
+  linkLabel = "Click here",
+  preText = "to see a demo for your brand's complete",
+  headline = "COMPETITOR & CATEGORY COMMERCE INSIGHTS",
+
+  imageSrc = "/commerce-intelligence.png",
+  imageAlt = "Commerce Intelligence 2025",
+
+  barColor = "#00626C",
+  textColor = "#FFFFFF",
+  radius = "12px",
+  padY = "18px",
+  padX = "24px",
+
+  // keep room for the image on the right inside the bar
+  reserveRight = "220px",
+
+  imageWidth = "140px",
+  imageTop = "-26px",
+  imageRight = "0px",
+  shadow = "0 8px 18px rgba(0,0,0,.28)",
+
+  containerWidth = "75%",
+  maxWidth = "1200px",
+  align = "left",
+
+  // fonts
+  ledeFontFamily = "Inter, system-ui, sans-serif",
+  headlineFontFamily = "Nimbus Sans Cond L,PPRightGroteskWide,Inter,system-ui,sans-serif",
+} = Astro.props as Props;
+
+const alignClass = align === "center" ? "center" : "left";
+---
+
+<section
+  class={`promo ${alignClass}`}
+  role="region"
+  aria-label="Commerce Intelligence demo"
+  style={`--w:${containerWidth}; --maxw:${maxWidth};`}
+>
+  <div
+    class="pill"
+    style={`--bar:${barColor}; --ink:${textColor}; --r:${radius}; --py:${padY}; --px:${padX};
+            --reserve:${reserveRight}; --img-w:${imageWidth}; --img-top:${imageTop};
+            --img-right:${imageRight}; --shadow:${shadow};
+            --lede-ff:${ledeFontFamily}; --headline-ff:${headlineFontFamily};`}
+  >
+    <p class="lede">
+      <a class="cta" href={href}>{linkLabel}</a>
+      &nbsp;{preText}
+    </p>
+
+    <p class="headline">{headline}</p>
+
+    <a class="badge" href={href} aria-label="Open Commerce Intelligence demo">
+      <img src={imageSrc} alt={imageAlt} loading="eager" decoding="async" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .promo{
+    position: relative;
+    width: var(--w);        /* controls how wide the banner is */
+    max-width: var(--maxw); /* optional cap if --w is a % */
+    margin: 24px 0;
+  }
+  .promo.center{ margin-left:auto; margin-right:auto; }
+
+  .pill{
+    position: relative;
+    background: var(--bar);
+    color: var(--ink);
+    border-radius: var(--r);
+    padding: var(--py) calc(var(--px) + var(--reserve)) var(--py) var(--px);
+  }
+
+  /* lede matches your subheader/nav style */
+  .lede{
+    margin: 0 0 10px;
+    font-family: var(--lede-ff);
+    font-weight: 4000;
+    font-size: 18px;
+    line-height: 1.35;
+    letter-spacing: .01em;
+    color: color-mix(in srgb, var(--ink) 92%, transparent);
+  }
+
+  .cta{
+    color: var(--ink);
+    font-family: var(--lede-ff);
+    font-weight: 500;
+    font-size: 20px;
+    text-decoration: underline;
+    text-decoration-thickness: 1.25px;
+    letter-spacing: .01em;
+    text-underline-offset: 2px;
+  }
+  .cta:hover{ opacity:.9; }
+  .cta:focus-visible{
+    outline: 2px solid #E9E4DE; outline-offset: 2px; border-radius: 4px;
+  }
+
+  /* headline matches your hero title look */
+  .headline{
+    margin: 0;
+    font-family: var(--headline-ff);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .01em;
+    font-size: 36px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  /* book / badge image on the right */
+  .badge{
+    position: absolute;
+    right: var(--img-right);
+    top: var(--img-top);
+    display: inline-block;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: var(--shadow);
+  }
+  .badge img{
+    display:block;
+    width: var(--img-w);
+    height: auto;
+    border-radius: 6px;
+  }
+
+  /* Responsive */
+  @media (max-width: 720px){
+    .pill{ padding-right: var(--px); }  /* remove reserved space */
+    .badge{ position: static; margin: 12px 0 0 auto; }
+  }
+</style>
