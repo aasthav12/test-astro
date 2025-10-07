@@ -1,0 +1,101 @@
+---
+interface Item { label: string; href: string }
+interface Props {
+  items?: Item[];
+  maxWidth?: string;
+  padX?: string;             // left/right gutter
+  padY?: string;             // <<< vertical padding INSIDE the nav
+  accent?: string;
+  textColor?: string;
+  borderColor?: string;
+  borderHeight?: string;     // top stroke thickness
+  currentPath?: string;
+
+  linkSize?: string;
+  linkWeight?: string | number;
+  gap?: string;
+  underlineHeight?: string;
+}
+
+const {
+  items = [
+    { label: "Home", href: "/" },
+    { label: "Consumer Research", href: "/consumer-research" },
+    { label: "Commerce Intelligence", href: "/commerce-intelligence" },
+    { label: "About PMG Alli", href: "/about-pmg-alli" }
+  ],
+  maxWidth = "1200px",
+  padX = "28px",
+  padY = "12px",             // <<< default
+  accent = "#00626C",
+  textColor = "#211F17",
+  borderColor = "#2E3142",
+  borderHeight = "6px",
+  currentPath = Astro.url.pathname,
+
+  linkSize = "18px",
+  linkWeight = 400,
+  gap = "36px",
+  underlineHeight = "3px",
+} = Astro.props as Props;
+---
+
+<nav class="nav-wrap"
+     aria-label="Primary"
+     style={`--mw:${maxWidth}; --px:${padX}; --pad-y:${padY};
+             --accent:${accent}; --text:${textColor}; --border:${borderColor}; --border-h:${borderHeight};
+             --link-size:${linkSize}; --link-weight:${linkWeight}; --gap:${gap}; --rule-h:${underlineHeight};`}>
+  <div class="inner">
+    <ul class="list">
+      {items.map((item) => {
+        const isActive = currentPath === item.href || (item.href !== "/" && currentPath.startsWith(item.href));
+        return (
+          <li>
+            <a href={item.href}
+               class={`link ${isActive ? "active" : ""}`}
+               aria-current={isActive ? "page" : undefined}>
+              {item.label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .nav-wrap{
+    border-top: var(--border-h) solid var(--border);
+    background: transparent;
+  }
+  .inner{
+    max-width: var(--mw);
+    margin: 0;                                 /* left-aligned block */
+    padding: var(--pad-y) var(--px) calc(var(--pad-y) - 2px); /* <<< uses padY */
+  }
+  .list{
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--gap);
+    align-items: center;
+    margin: 0; padding: 0; list-style: none;
+  }
+  .link{
+    position: relative;
+    color: var(--text);
+    text-decoration: none;
+    font: var(--link-weight) var(--link-size) / 1.25 Inter, system-ui, sans-serif;
+    letter-spacing: 0.02em;
+    padding-bottom: 6px;
+  }
+  .link:hover{ color: var(--accent); }
+  .link:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }
+  .link.active{ color: var(--accent); }
+  .link.active::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0;
+    height: var(--rule-h);
+    background: var(--accent);
+    border-radius:3px;
+  }
+</style>

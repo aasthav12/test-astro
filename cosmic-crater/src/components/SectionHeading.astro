@@ -1,0 +1,90 @@
+---
+/**
+ * SectionHeading.astro
+ * Section title with a short teal underline, using the same font stack as TopNav.
+ */
+interface Props {
+  text?: string;
+
+  /* typography */
+  fontSize?: string;          // e.g. "20px"
+  fontWeight?: string|number; // e.g. 800
+  letterSpacing?: string;     // e.g. "0.02em"
+  lineHeight?: string;        // e.g. "1.2"
+
+  /* colors */
+  color?: string;             // title color
+  accent?: string;            // underline color
+
+  /* underline */
+  underlineWidth?: string;    // e.g. "300px" or "100%"
+  underlineHeight?: string;   // e.g. "6px"
+  underlineRadius?: string;   // e.g. "3px"
+
+  /* spacing */
+  gap?: string;               // space between title and rule
+  padX?: string;              // keep at "0" to align with page gutter
+  maxWidth?: string;
+  padTop?: string;      // NEW: padding-top inside the component
+  padBottom?: string;   // optional
+}
+
+const {
+  text = "COMMERCE INSIGHTS FROM PMG, POWERED BY ALLI",
+
+  // 🔤 match TopNav defaults
+  fontSize = "20px",
+  fontWeight = 400,
+  letterSpacing = "0.02em",
+  lineHeight = "1.2",
+  fontFamily = "Inter, system-ui, sans-serif",
+
+  // 🎨 palette
+  color = "#211F17",
+  accent = "#00626C",
+
+  // underline
+  underlineWidth = "300px",
+  underlineHeight = "6px",
+  underlineRadius = "0px",
+
+  gap = "10px",
+  padX = "0",
+  maxWidth = "none",
+  padTop = "0",
+  padBottom = "0",
+} = Astro.props as Props;
+---
+
+<div class="wrap"
+     style={`--fs:${fontSize}; --fw:${fontWeight}; --ls:${letterSpacing}; --lh:${lineHeight}; --ff:${fontFamily};
+             --color:${color}; --accent:${accent}; --uw:${underlineWidth}; --uh:${underlineHeight}; --ur:${underlineRadius};
+             --gap:${gap}; --px:${padX}; --mw:${maxWidth}; --pt:${padTop}; --pb:${padBottom};`}>
+  <h2 class="title">{text}</h2>
+  <span class="rule" aria-hidden="true"></span>
+</div>
+
+<style>
+  .wrap{
+    max-width: var(--mw);
+    padding: var(--pt) var(--px) var(--pb);
+  }
+  .title{
+    margin: 0;
+    color: var(--color);
+    text-transform: uppercase;
+    font-family: var(--ff);          /* ← same as TopNav */
+    font-size: var(--fs);
+    font-weight: var(--fw);
+    letter-spacing: var(--ls);       /* 0.02em, like nav */
+    line-height: var(--lh);
+  }
+  .rule{
+    display: block;
+    width: var(--uw);
+    height: var(--uh);
+    margin-top: var(--gap);
+    background: var(--accent);
+    border-radius: var(--ur);
+  }
+</style>
