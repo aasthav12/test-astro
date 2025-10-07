@@ -4,6 +4,7 @@ import FiltersBar from "../components/FiltersBar.astro";
 import SectionHeading from "../components/SectionHeading.astro";
 import VizSection from "../components/VizSection.astro";
 import Banner from "../components/Banner.astro";
+import MetricCard from "../components/MetricCard.astro";
 ---
 
 <!-- Nav: 60px gutter, a bit taller -->
@@ -33,12 +34,72 @@ import Banner from "../components/Banner.astro";
     gap="20px"
     padTop="32px"
     padBottom="24px"
-  />
+  >
+    <MetricCard
+      title="Revenue"
+      icon="cash"
+      value="$74.8B"
+      caption="Estimated Category Revenue in $USD"
+      deltaText="+14.6% YoY compared to $65.3B"
+      deltaSign="up"
+      cardBg="#7FBFC6"
+      ink="#0E3424"
+      ribbonBg="#FFFFFF"
+      upColor="#0E6A73"
+      minHeight="260px"
+      align-items: start;
+    />
+
+    <MetricCard
+      title="Market Shape"
+      icon="pie"
+      value="12.3%"
+      caption="Market Shape Claimed by Top 5 Brands"
+      deltaText="+14.6% YoY compared to 23%"
+      deltaSign="up"
+      cardBg="#7FBFC6"
+      ink="#0E3424"
+      ribbonBg="#FFFFFF"
+      upColor="#0E6A73"
+      minHeight="260px"
+      align-items: start;
+    />
+
+    <MetricCard
+      title="Search Volume"
+      icon="search"
+      value="3.718B"
+      caption="Estimated Category Search Volume"
+      deltaText="-56.5% YoY compared to 8.552B"
+      deltaSign="up"
+      cardBg="#7FBFC6"
+      ink="#0E3424"
+      ribbonBg="#FFFFFF"
+      upColor="#0E6A73"
+      minHeight="260px"
+      align-items: start;
+    />
+
+    <MetricCard
+      title="Product Pricing"
+      icon="tag"
+      value="$68.47"
+      caption="Average Product Price"
+      deltaText="+16.7% YoY compared to $58.67"
+      deltaSign="up"
+      cardBg="#7FBFC6"
+      ink="#0E3424"
+      ribbonBg="#FFFFFF"
+      upColor="#0E6A73"
+      minHeight="260px"
+      align-items: start;
+    />
+  </VizSection>
 
   <VizSection
     title="Thought Leadership for your Category"
     maxWidth="3000px"
-    cols={4}
+    cols={1}
     gap="20px"
     padTop="32px"
     padBottom="24px"
@@ -47,7 +108,7 @@ import Banner from "../components/Banner.astro";
   <VizSection
     title="Market Trends"
     maxWidth="3000px"
-    cols={4}
+    cols={1}
     gap="20px"
     padTop="32px"
     padBottom="24px"
@@ -66,7 +127,7 @@ import Banner from "../components/Banner.astro";
   <VizSection
     title="YoY Brand Insights by Top Brands"
     maxWidth="4000px"
-    cols={4}
+    cols={1}
     gap="20px"
     padTop="32px"
     padBottom="24px"
@@ -75,7 +136,7 @@ import Banner from "../components/Banner.astro";
   <VizSection
     title="Category Leaders"
     maxWidth="3000px"
-    cols={4}
+    cols={1}
     gap="20px"
     padTop="32px"
     padBottom="24px"
@@ -84,7 +145,7 @@ import Banner from "../components/Banner.astro";
   <VizSection
     title="Amazon US Category Leaderboard"
     maxWidth="3000px"
-    cols={4}
+    cols={1}
     gap="20px"
     padTop="32px"
     padBottom="24px"
